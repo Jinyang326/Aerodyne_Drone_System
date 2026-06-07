@@ -62,6 +62,39 @@ def pest_detection(pest_level):
     return risk, action, loss
 
 # ==========================================
+# Flight Planning Module
+# ==========================================
+
+def flight_planning(weather):
+
+    if weather == "Sunny":
+
+        status = "APPROVED"
+        reason = "Weather conditions are ideal."
+
+    elif weather == "Cloudy":
+
+        status = "APPROVED"
+        reason = "Safe for drone operation."
+
+    elif weather == "Windy":
+
+        status = "DELAYED"
+        reason = "Strong wind may affect flight stability."
+
+    elif weather == "Rainy":
+
+        status = "CANCELLED"
+        reason = "Drone operation is unsafe in rain."
+
+    else:
+
+        status = "UNKNOWN"
+        reason = "Weather data unavailable."
+
+    return status, reason
+
+# ==========================================
 # Main Analysis Function
 # ==========================================
 
@@ -74,6 +107,8 @@ def analyze_mission():
         land_size = float(land_entry.get())
 
         pest_level = pest_combo.get()
+
+        weather = weather_combo.get()
 
         if land_size <= 0:
 
@@ -88,6 +123,10 @@ def analyze_mission():
         )
         risk, action, loss = pest_detection(
             pest_level
+        )
+
+        status, reason = flight_planning(
+            weather
         )
 
         
@@ -115,6 +154,12 @@ Recommended Action:
 
 Potential Yield Loss:
 {loss}
+
+Mission Status:
+{status}
+
+Flight Decision:
+{reason}
 """
 
         result_label.config(text=result_text)

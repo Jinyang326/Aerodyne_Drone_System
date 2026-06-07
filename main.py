@@ -1,5 +1,81 @@
 import tkinter as tk
 from tkinter import ttk
+from math import ceil
+
+# ==========================================
+# Crop Monitoring Module
+# Analyze crop monitoring mission
+# ==========================================
+
+def crop_monitoring(crop_type, land_size):
+
+    if crop_type == "Palm Oil":
+        coverage = 12
+
+    elif crop_type == "Paddy":
+        coverage = 8
+
+    elif crop_type == "Vegetable":
+        coverage = 5
+
+    else:
+        coverage = 10
+
+    flights_needed = land_size / coverage
+
+    battery_required = ceil(flights_needed)
+
+    flight_duration = battery_required * 20
+
+    return coverage, battery_required, flight_duration
+
+# ==========================================
+# Main Analysis Function
+# ==========================================
+
+def analyze_mission():
+
+    try:
+
+        crop_type = crop_combo.get()
+
+        land_size = float(land_entry.get())
+
+        if land_size <= 0:
+
+            result_label.config(
+                text="Invalid land size. Please enter a value greater than 0."
+            )
+            return
+
+        coverage, battery, duration = crop_monitoring(
+            crop_type,
+            land_size
+        )
+
+        result_text = f"""
+MISSION ANALYSIS RESULT
+
+Drone Model:
+Aerodyne AGX-100
+
+Coverage Efficiency:
+{coverage} ha/flight
+
+Battery Required:
+{battery}
+
+Estimated Flight Duration:
+{duration} mins
+"""
+
+        result_label.config(text=result_text)
+
+    except ValueError:
+
+        result_label.config(
+            text="Please enter a valid numeric value for land size."
+        )
 
 root = tk.Tk()
 
@@ -65,14 +141,30 @@ mission_combo.grid(row=4, column=1)
 analyze_button = tk.Button(
     root,
     text="Analyze Mission",
-    width=20
+    width=20,
+    command=analyze_mission
 )
 analyze_button.pack(pady=20)
 
 result_label = tk.Label(
     root,
-    text="Mission Result Will Be Displayed Here",
-    font=("Arial", 12)
+    text="""
+MISSION ANALYSIS RESULT
+
+Drone Model:
+-
+
+Coverage Efficiency:
+-
+
+Battery Required:
+-
+
+Estimated Flight Duration:
+-
+""",
+    font=("Arial", 12),
+    justify="left"
 )
 result_label.pack(pady=20)
 

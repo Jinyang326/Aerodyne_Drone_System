@@ -30,6 +30,38 @@ def crop_monitoring(crop_type, land_size):
     return coverage, battery_required, flight_duration
 
 # ==========================================
+# Pest Detection Module
+# ==========================================
+
+def pest_detection(pest_level):
+
+    if pest_level == "Low":
+
+        risk = "LOW"
+        action = "Routine Monitoring"
+        loss = "5%"
+
+    elif pest_level == "Medium":
+
+        risk = "MEDIUM"
+        action = "Drone Spraying Recommended"
+        loss = "15%"
+
+    elif pest_level == "High":
+
+        risk = "HIGH"
+        action = "Immediate Drone Deployment Required"
+        loss = "25%"
+
+    else:
+
+        risk = "UNKNOWN"
+        action = "No Recommendation"
+        loss = "0%"
+
+    return risk, action, loss
+
+# ==========================================
 # Main Analysis Function
 # ==========================================
 
@@ -40,6 +72,8 @@ def analyze_mission():
         crop_type = crop_combo.get()
 
         land_size = float(land_entry.get())
+
+        pest_level = pest_combo.get()
 
         if land_size <= 0:
 
@@ -52,6 +86,11 @@ def analyze_mission():
             crop_type,
             land_size
         )
+        risk, action, loss = pest_detection(
+            pest_level
+        )
+
+        
 
         result_text = f"""
 MISSION ANALYSIS RESULT
@@ -67,6 +106,15 @@ Battery Required:
 
 Estimated Flight Duration:
 {duration} mins
+
+Pest Risk Level:
+{risk}
+
+Recommended Action:
+{action}
+
+Potential Yield Loss:
+{loss}
 """
 
         result_label.config(text=result_text)

@@ -95,6 +95,34 @@ def flight_planning(weather):
     return status, reason
 
 # ==========================================
+# Mission Service Module
+# ==========================================
+
+def mission_service(mission_type):
+
+    if mission_type == "Crop Monitoring":
+
+        service = "Aerial Crop Monitoring"
+        rate = 15
+
+    elif mission_type == "Fertilizer Spraying":
+
+        service = "Precision Fertilizer Spraying"
+        rate = 35
+
+    elif mission_type == "Pest Detection":
+
+        service = "AI Pest Detection Analysis"
+        rate = 20
+
+    else:
+
+        service = "No Service Selected"
+        rate = 0
+
+    return service, rate
+
+# ==========================================
 # Main Analysis Function
 # ==========================================
 
@@ -109,6 +137,8 @@ def analyze_mission():
         pest_level = pest_combo.get()
 
         weather = weather_combo.get()
+
+        mission_type = mission_combo.get()
 
         if land_size <= 0:
 
@@ -127,6 +157,9 @@ def analyze_mission():
 
         status, reason = flight_planning(
             weather
+        )
+        service, rate = mission_service(
+            mission_type
         )
 
         
@@ -160,6 +193,15 @@ Mission Status:
 
 Flight Decision:
 {reason}
+
+Mission Type:
+{mission_type}
+
+Recommended Service:
+{service}
+
+Service Rate:
+RM{rate}/ha
 """
 
         result_label.config(text=result_text)
@@ -173,7 +215,7 @@ Flight Decision:
 root = tk.Tk()
 
 root.title("Aerodyne Smart Agricultural Drone System")
-root.geometry("900x600")
+root.geometry("1000x750")
 
 title_label = tk.Label(
     root,

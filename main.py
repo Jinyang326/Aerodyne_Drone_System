@@ -142,13 +142,73 @@ def analyze_mission():
 
         crop_type = crop_combo.get()
 
-        land_size = float(land_entry.get())
+        land_size_text = land_entry.get()
+
+        if land_size_text == "":
+
+            result_textbox.delete("1.0", tk.END)
+
+            result_textbox.insert(
+                tk.END,
+                "Please enter a land size."
+            )
+
+            return
+
+        land_size = float(land_size_text)
 
         pest_level = pest_combo.get()
 
         weather = weather_combo.get()
 
         mission_type = mission_combo.get()
+
+        if crop_type == "":
+
+            result_textbox.delete("1.0", tk.END)
+
+            result_textbox.insert(
+                tk.END,
+                "Please select a Crop Type."
+            )
+
+            return
+
+
+        if pest_level == "":
+
+            result_textbox.delete("1.0", tk.END)
+
+            result_textbox.insert(
+                tk.END,
+                "Please select a Pest Level."
+            )
+
+            return
+
+
+        if weather == "":
+
+            result_textbox.delete("1.0", tk.END)
+
+            result_textbox.insert(
+                tk.END,
+                "Please select a Weather Condition."
+            )
+
+            return
+
+
+        if mission_type == "":
+
+            result_textbox.delete("1.0", tk.END)
+
+            result_textbox.insert(
+                tk.END,
+                "Please select a Mission Type."
+            )
+
+            return
 
         if land_size <= 0:
 

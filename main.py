@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from math import ceil
+from reportlab.pdfgen import canvas
+from tkinter import messagebox
 
 # ==========================================
 # Crop Monitoring Module
@@ -303,6 +305,91 @@ RM{total_cost:.2f}
             "Please enter a valid numeric value for land size."
         )
 
+# ==========================================
+# PDF Export Module
+# ==========================================
+
+def export_pdf():
+
+    import os
+    print(os.getcwd())  
+
+    try:
+
+        crop_type = crop_combo.get()
+        land_size = float(land_entry.get())
+        pest_level = pest_combo.get()
+        weather = weather_combo.get()
+        mission_type = mission_combo.get()
+
+        coverage, battery, duration = crop_monitoring(
+            crop_type,
+            land_size
+        )
+
+        risk, action, loss = pest_detection(
+            pest_level
+        )
+
+        status, reason = flight_planning(
+            weather
+        )
+
+        service, rate = mission_service(
+            mission_type
+        )
+
+        total_cost = cost_estimation(
+            land_size,
+            rate
+        )
+
+        pdf = canvas.Canvas("mission_report.pdf")
+
+        y = 800
+
+        pdf.setFont("Helvetica-Bold", 16)
+        pdf.drawString(50, y, "AERODYNE MISSION REPORT")
+
+        y -= 40
+
+        pdf.setFont("Helvetica", 12)
+
+        report_lines = [
+            f"Crop Type: {crop_type}",
+            f"Land Size: {land_size} ha",
+            f"Mission Type: {mission_type}",
+            f"Recommended Service: {service}",
+            f"Coverage Efficiency: {coverage} ha/flight",
+            f"Battery Required: {battery}",
+            f"Estimated Flight Duration: {duration} mins",
+            f"Pest Risk Level: {risk}",
+            f"Recommended Action: {action}",
+            f"Potential Yield Loss: {loss}",
+            f"Mission Status: {status}",
+            f"Flight Decision: {reason}",
+            f"Service Rate: RM{rate}/ha",
+            f"Estimated Mission Cost: RM{total_cost:.2f}"
+        ]
+
+        for line in report_lines:
+
+            pdf.drawString(50, y, line)
+            y -= 25
+
+        pdf.save()
+
+        messagebox.showinfo(
+            "Success",
+            "PDF Report Generated Successfully!"
+        )
+
+    except:
+
+        messagebox.showerror(
+            "Error",
+            "Please complete all mission information first."
+        )
 root = tk.Tk()
 
 root.title("Aerodyne Smart Agricultural Drone System")
@@ -371,6 +458,15 @@ analyze_button = tk.Button(
     command=analyze_mission
 )
 analyze_button.pack(pady=20)
+
+pdf_button = tk.Button(
+    root,
+    text="Export PDF Report",
+    width=20,
+    command=export_pdf
+)
+
+pdf_button.pack(pady=5)
 
 result_frame = tk.LabelFrame(
     root,

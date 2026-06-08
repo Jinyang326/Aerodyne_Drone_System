@@ -123,6 +123,16 @@ def mission_service(mission_type):
     return service, rate
 
 # ==========================================
+# Cost Estimation Module
+# ==========================================
+
+def cost_estimation(land_size, rate):
+
+    total_cost = land_size * rate
+
+    return total_cost
+
+# ==========================================
 # Main Analysis Function
 # ==========================================
 
@@ -142,9 +152,13 @@ def analyze_mission():
 
         if land_size <= 0:
 
-            result_label.config(
-                text="Invalid land size. Please enter a value greater than 0."
+            result_textbox.delete("1.0", tk.END)
+
+            result_textbox.insert(
+                tk.END,
+                "Invalid land size. Please enter a value greater than 0."
             )
+
             return
 
         coverage, battery, duration = crop_monitoring(
@@ -162,7 +176,10 @@ def analyze_mission():
             mission_type
         )
 
-        
+        total_cost = cost_estimation(
+            land_size,
+            rate
+        )
 
         result_text = f"""
 MISSION ANALYSIS RESULT
@@ -202,20 +219,34 @@ Recommended Service:
 
 Service Rate:
 RM{rate}/ha
+
+Estimated Mission Cost:
+RM{total_cost:.2f}
 """
 
-        result_label.config(text=result_text)
+        result_textbox.delete(
+            "1.0",
+            tk.END
+        )
+
+        result_textbox.insert(
+            tk.END,
+            result_text
+        )
 
     except ValueError:
 
-        result_label.config(
-            text="Please enter a valid numeric value for land size."
+        result_textbox.delete("1.0", tk.END)
+
+        result_textbox.insert(
+            tk.END,
+            "Please enter a valid numeric value for land size."
         )
 
 root = tk.Tk()
 
 root.title("Aerodyne Smart Agricultural Drone System")
-root.geometry("1000x750")
+root.geometry("1100x900")
 
 title_label = tk.Label(
     root,
@@ -281,26 +312,40 @@ analyze_button = tk.Button(
 )
 analyze_button.pack(pady=20)
 
-result_label = tk.Label(
+result_frame = tk.LabelFrame(
     root,
-    text="""
-MISSION ANALYSIS RESULT
-
-Drone Model:
--
-
-Coverage Efficiency:
--
-
-Battery Required:
--
-
-Estimated Flight Duration:
--
-""",
-    font=("Arial", 12),
-    justify="left"
+    text="Mission Analysis Result",
+    padx=10,
+    pady=10
 )
-result_label.pack(pady=20)
+
+result_frame.pack(
+    fill="both",
+    expand=True,
+    padx=20,
+    pady=20
+)
+
+scrollbar = tk.Scrollbar(result_frame)
+scrollbar.pack(side="right", fill="y")
+
+result_textbox = tk.Text(
+    result_frame,
+    wrap="word",
+    width=70,
+    height=20,
+    font=("Courier New", 11),
+    yscrollcommand=scrollbar.set
+)
+
+result_textbox.pack(
+    side="left",
+    fill="both",
+    expand=True
+)
+
+scrollbar.config(
+    command=result_textbox.yview
+)
 
 root.mainloop()

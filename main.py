@@ -390,10 +390,36 @@ def export_pdf():
             "Error",
             "Please complete all mission information first."
         )
+
+# ==========================================
+# Clear Form Module
+# ==========================================
+
+def clear_form():
+
+    crop_combo.set("")
+
+    pest_combo.set("")
+
+    weather_combo.set("")
+
+    mission_combo.set("")
+
+    land_entry.delete(
+        0,
+        tk.END
+    )
+
+    result_textbox.delete(
+        "1.0",
+        tk.END
+    )
+
 root = tk.Tk()
 
 root.title("Aerodyne Smart Agricultural Drone System")
 root.geometry("1100x900")
+root.eval('tk::PlaceWindow . center')
 
 title_label = tk.Label(
     root,
@@ -467,6 +493,24 @@ pdf_button = tk.Button(
 )
 
 pdf_button.pack(pady=5)
+
+clear_button = tk.Button(
+    root,
+    text="Clear",
+    width=20,
+    command=clear_form
+)
+
+clear_button.pack(pady=5)
+
+exit_button = tk.Button(
+    root,
+    text="Exit",
+    width=20,
+    command=root.destroy
+)
+
+exit_button.pack(pady=5)
 
 result_frame = tk.LabelFrame(
     root,
